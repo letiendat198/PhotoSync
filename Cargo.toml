@@ -1,0 +1,22 @@
+[package]
+name = "PhotoSync"
+version = "0.1.0"
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+yup-oauth2 = "6.6.0"
+reqwest = "0.11.10"
+serde = "1.0.137"
+hyper = "0.14.18"
+notify = "4.0.17"
+tokio = { version = "1.18.2", features = ["full"] }
+chrono = "0.4"
+serde_json = "1.0"
+time = "0.3.9"
+hyper-rustls = "0.23.0"
+notify-rust = "4"
+hyper-tls = "0.5.0"
+webbrowser = "0.7.1"
+dirs = "1.0.4"

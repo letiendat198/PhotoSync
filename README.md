@@ -1,0 +1,1 @@
+Mini application to sync my screenshots on PC to Google Photos automatically
