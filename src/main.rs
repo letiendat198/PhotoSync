@@ -9,6 +9,7 @@ use yup_oauth2::authenticator_delegate::{DefaultInstalledFlowDelegate, Installed
 use notify_rust::Notification;
 use std::future::Future;
 use std::pin::Pin;
+use std::process::Command;
 use webbrowser;
 use dirs;
 
@@ -56,6 +57,13 @@ async fn main() {
         }
     };
     let scopes = &["https://www.googleapis.com/auth/photoslibrary.appendonly"];
+
+    let is_ffmpeg = Command::new("cmd").arg("/C").arg("ffmpeg.exe").arg("-version").status().expect("Cannot execute");
+    if !is_ffmpeg.success() {
+        Notification::new().summary("PhotoSync").body("ffmpeg.exe not found! Please make sure ffmpeg.exe is in the same directory as the executable or in PATH. Panic!").show().unwrap();
+        panic!("ffmpeg.exe not found!");
+    }
+
     Notification::new().summary("PhotoSync").body("PhotoSync is running!").show().unwrap();
 
     let (tx, rx) = channel();
@@ -72,6 +80,12 @@ async fn main() {
             panic!("{}", e);
         } 
     }
+
+    let mut path2: path::PathBuf = dirs::home_dir().unwrap();
+    path2.push("Documents");
+    path2.push("League of Legends");
+    path2.push("Highlights");
+    watcher.watch(path2, RecursiveMode::Recursive).unwrap();
 
     loop {
         match rx.recv() {
