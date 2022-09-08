@@ -64,8 +64,6 @@ async fn main() {
         panic!("ffmpeg.exe not found!");
     }
 
-    Notification::new().summary("PhotoSync").body("PhotoSync is running!").show().unwrap();
-
     let (tx, rx) = channel();
 
     let mut watcher: RecommendedWatcher = Watcher::new(tx, Duration::from_secs(5)).unwrap(); 
@@ -73,19 +71,58 @@ async fn main() {
     let mut path: path::PathBuf = dirs::home_dir().unwrap();
     path.push("Pictures");
     path.push("Screenshots");
-    match watcher.watch(path, RecursiveMode::Recursive) {
-        Ok(_a) => println!("Watcher inited"),
-        Err(e) => {
-            Notification::new().summary("PhotoSync").body("Unable to start Watcher. Panic!");
-            panic!("{}", e);
-        } 
+    if path.exists() {
+        match watcher.watch(path, RecursiveMode::Recursive) {
+            Ok(_a) => println!("Watcher inited"),
+            Err(e) => {
+                Notification::new().summary("PhotoSync").body("Unable to start Watcher. Panic!").show().unwrap();
+                panic!("{}", e);
+            } 
+        }
+    }
+    else {
+        let mut path: path::PathBuf = dirs::home_dir().unwrap();
+        path.push("OneDrive");
+        path.push("Pictures");
+        path.push("Screenshots");
+        match watcher.watch(path, RecursiveMode::Recursive) {
+            Ok(_a) => println!("Watcher inited"),
+            Err(e) => {
+                Notification::new().summary("PhotoSync").body("Unable to start Watcher. Panic!").show().unwrap();
+                panic!("{}", e);
+            } 
+        }
     }
 
     let mut path2: path::PathBuf = dirs::home_dir().unwrap();
     path2.push("Documents");
     path2.push("League of Legends");
     path2.push("Highlights");
-    watcher.watch(path2, RecursiveMode::Recursive).unwrap();
+    if path2.exists() {
+        match watcher.watch(path2, RecursiveMode::Recursive) {
+            Ok(_a) => println!("Watcher inited"),
+            Err(e) => {
+                Notification::new().summary("PhotoSync").body("Unable to start Watcher. Panic!").show().unwrap();
+                panic!("{}", e);
+            } 
+        }
+    }
+    else {
+        let mut path2: path::PathBuf = dirs::home_dir().unwrap();
+        path2.push("OneDrive");
+        path2.push("Documents");
+        path2.push("League of Legends");
+        path2.push("Highlights");
+        match watcher.watch(path2, RecursiveMode::Recursive) {
+            Ok(_a) => println!("Watcher inited"),
+            Err(e) => {
+                Notification::new().summary("PhotoSync").body("Unable to start Watcher. Panic!").show().unwrap();
+                panic!("{}", e);
+            } 
+        }
+    }
+
+    Notification::new().summary("PhotoSync").body("PhotoSync is running!").show().unwrap();
 
     loop {
         match rx.recv() {
